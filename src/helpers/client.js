@@ -3,11 +3,11 @@ import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
-//import config from "../config";
+import config from "../config";
 
 const client = new ApolloClient({
   link: ApolloLink.from([
-    new HttpLink({ uri: "http://localhost:4000/graphql" }),
+    new HttpLink({ uri: config.API_URL }),
   ]),
   cache: new InMemoryCache(),
 });
