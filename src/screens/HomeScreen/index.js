@@ -17,17 +17,33 @@ class HomeScreen extends React.Component {
     title: "Gotcha!"
   };
 
-  handleGrantPermissions = async () => {
+  static async getLocation() {
+    const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync();
+
+    return { latitude, longitude };
+  }
+
+  navigate = async () => {
     const { navigation } = this.props;
+    const location = await HomeScreen.getLocation();
+
+    navigation.navigate("ArenaList", { location });
+  }
+
+  handleGrantPermissions = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
     if (status !== "granted") {
       console.log("You must enable location services so we can retrieve the list of Arenas");
     }
 
-    const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync();
+    this.navigate();
+  }
 
-    navigation.navigate("ArenaList", { location: { latitude, longitude } });
+  async componentDidMount() {
+    if (await Location.hasServicesEnabledAsync()) {
+      this.navigate();
+    }
   }
 
   render() {
