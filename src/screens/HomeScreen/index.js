@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
 const styles = StyleSheet.create({
@@ -12,12 +13,21 @@ const styles = StyleSheet.create({
 });
 
 class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: "Gotcha!"
+  };
+
   handleGrantPermissions = async () => {
+    const { navigation } = this.props;
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
     if (status !== "granted") {
       console.log("You must enable location services so we can retrieve the list of Arenas");
     }
+
+    const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync();
+
+    navigation.navigate("ArenaList", { location: { latitude, longitude } });
   }
 
   render() {
