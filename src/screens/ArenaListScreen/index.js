@@ -1,9 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
 import { useQuery } from "@apollo/react-hooks";
 
 import ArenasQuery from "../../queries/Arenas";
+
+import ErrorMessage from "../../components/ErrorMessage";
+import Loading from "../../components/Loading";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,9 +24,15 @@ const ArenaListScreen = ({ navigation }) => {
     }
   });
 
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage
+                      error={error}
+                      message="Error occured retrieving arenas. Try again later."
+                    />;
+
   return (
     <View style={styles.container}>
-      <Text>You are viewing arenas for {latitude}/{longitude}.</Text>
+      <Text>There were {data.arenas.length} arenas found for {latitude}/{longitude}.</Text>
     </View>
   );
 };
